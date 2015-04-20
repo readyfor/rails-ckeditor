@@ -57,10 +57,15 @@ module Ckeditor
       end
       
       output_buffer = ActiveSupport::SafeBuffer.new
-        
-      output_buffer << ActionView::Base::InstanceTag.new(object_name, field, self, object).to_text_area_tag(textarea_options.merge(options))
-      
-      output_buffer << javascript_tag("if (CKEDITOR.instances['#{element_id}']) { 
+
+      if defined?(ActionView::Base::InstanceTag)
+        output_buffer << ActionView::Base::InstanceTag.new(object_name, field, self, object).to_text_area_tag(textarea_options.merge(options))
+      else
+        tag_options = textarea_options.merge(options).merge(object: object)
+        output_buffer << ActionView::Helpers::Tags::TextArea.new(object_name, field, self, tag_options).render
+      end
+
+      output_buffer << javascript_tag("if (CKEDITOR.instances['#{element_id}']) {
         CKEDITOR.remove(CKEDITOR.instances['#{element_id}']);}
         CKEDITOR.replace('#{element_id}', { #{ckeditor_applay_options(ckeditor_options)} });")
         

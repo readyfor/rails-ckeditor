@@ -13,9 +13,11 @@ module Ckeditor
     config.after_initialize do
       ActionView::Base.send :include, Ckeditor::ViewHelper
       ActionView::Helpers::FormBuilder.send :include, Ckeditor::FormBuilder
-      
-      ActionView::Helpers::AssetTagHelper.register_javascript_expansion :ckeditor => ["ckeditor/ckeditor"]
-      
+
+      if ActionView::Helpers::AssetTagHelper.respond_to?(:register_javascript_expansion)
+        ActionView::Helpers::AssetTagHelper.register_javascript_expansion :ckeditor => ["ckeditor/ckeditor"]
+      end
+
       if Object.const_defined?("Formtastic")
         ::Formtastic::SemanticFormBuilder.send :include, Ckeditor::Hooks::FormtasticBuilder
       end
