@@ -18,10 +18,15 @@ module Ckeditor
         ActionView::Helpers::AssetTagHelper.register_javascript_expansion :ckeditor => ["ckeditor/ckeditor"]
       end
 
-      if Object.const_defined?("Formtastic")
-        ::Formtastic::SemanticFormBuilder.send :include, Ckeditor::Hooks::FormtasticBuilder
-      end
-      
+      # NOTE: 2015/7/7
+      # このバージョンの CKEditor が想定する Formtastic はバージョンが古いため、ActiveAdmin が使う Formtastic と
+      # コンフリクトしてしまう。(現在の Formatastic には以下の SemanticFormBuilder はない)
+      # CKEditor の Formatastic 連携は使用していないとおもわれるので、以下をコメントアウトしておく。
+      #
+      # if Object.const_defined?("Formtastic")
+      #   ::Formtastic::SemanticFormBuilder.send :include, Ckeditor::Hooks::FormtasticBuilder
+      # end
+
       if Object.const_defined?("SimpleForm")
         ::SimpleForm::FormBuilder.send :include, Ckeditor::Hooks::SimpleFormBuilder
       end
